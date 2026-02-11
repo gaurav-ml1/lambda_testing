@@ -5,6 +5,6 @@ app = FastAPI()
 
 @app.get("/")
 def root():
-    return {"message": "FastAPI running on Lambda via Docker 🚀"}
+    return {"message": "Updated: FastAPI running on Lambda via Docker 🚀"}
 
 handler = Mangum(app)
