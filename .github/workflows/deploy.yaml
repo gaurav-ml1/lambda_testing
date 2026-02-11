@@ -44,6 +44,18 @@ jobs:
             --image-uri \
             ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/fastapi-lambda:latest
       
+          - name: Update Lambda with new image
+        run: |
+          aws lambda update-function-code \
+            --function-name fastapi-lambda \
+            --image-uri \
+            ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/fastapi-lambda:latest
+
+      - name: Wait for Lambda update to complete
+        run: |
+          aws lambda wait function-updated \
+            --function-name fastapi-lambda
+
       - name: Publish new version
         id: publish
         run: |
