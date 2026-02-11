@@ -36,15 +36,8 @@ jobs:
         run: |
           docker push \
           ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/fastapi-lambda:latest
-
-      - name: Update Lambda
-        run: |
-          aws lambda update-function-code \
-            --function-name fastapi-lambda \
-            --image-uri \
-            ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/fastapi-lambda:latest
       
-          - name: Update Lambda with new image
+      - name: Update Lambda with new image
         run: |
           aws lambda update-function-code \
             --function-name fastapi-lambda \
