@@ -62,5 +62,5 @@ jobs:
         run: |
           aws lambda update-alias \
             --function-name fastapi-lambda \
-            --name prod \
+            --name first_lambda \
             --function-version $VERSION
