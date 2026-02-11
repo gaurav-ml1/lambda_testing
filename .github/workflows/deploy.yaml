@@ -43,3 +43,19 @@ jobs:
             --function-name fastapi-lambda \
             --image-uri \
             ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/fastapi-lambda:latest
+      
+      - name: Publish new version
+        id: publish
+        run: |
+          VERSION=$(aws lambda publish-version \
+            --function-name fastapi-lambda \
+            --query 'Version' \
+            --output text)
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
+
+      - name: Update alias to new version
+        run: |
+          aws lambda update-alias \
+            --function-name fastapi-lambda \
+            --name prod \
+            --function-version $VERSION
