@@ -41,4 +41,8 @@ def get_user(user_id: str):
     response = table.get_item(Key={"user_id": user_id})
     return response.get("Item", {"message": "User not found"})
 
+@app.get("/users")
+def get_users():
+    response = table.scan()
+    return response.get("Items", [])
 handler = Mangum(app)
