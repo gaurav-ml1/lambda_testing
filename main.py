@@ -5,9 +5,9 @@ from fastapi import FastAPI
 from mangum import Mangum
 
 # Read environment variables
-AWS_REGION = os.getenv("AWS_REGION", "ap-south-1")
-TABLE_NAME = os.getenv("DYNAMODB_TABLE", "users")
-ENVIRONMENT = os.getenv("ENVIRONMENT", "dev")
+AWS_REGION = os.getenv("AWS_REGION")
+TABLE_NAME = os.getenv("DYNAMODB_TABLE")
+ENVIRONMENT = os.getenv("ENVIRONMENT")
 
 # Initialize DynamoDB
 dynamodb = boto3.resource("dynamodb", region_name=AWS_REGION)
@@ -17,6 +17,7 @@ app = FastAPI(title="Serverless FastAPI + DynamoDB")
 
 @app.get("/")
 def root():
+    print(f"Environment: {ENVIRONMENT}, Table: {TABLE_NAME}")
     return {
         "message": "API running",
         "environment": ENVIRONMENT,
