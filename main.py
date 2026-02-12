@@ -38,7 +38,7 @@ def create_user(name: str):
 
 @app.get("/users/{user_id}")
 def get_user(user_id: str):
-    response = table.get_item(Key={"id": user_id})
+    response = table.get_item(Key={"user_id": user_id})
     return response.get("Item", {"message": "User not found"})
 
 handler = Mangum(app)
