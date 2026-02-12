@@ -1,20 +1,44 @@
+import os
+import uuid
+import boto3
 from fastapi import FastAPI
 from mangum import Mangum
-from pydantic import BaseModel
 
-app = FastAPI()
+# Read environment variables
+AWS_REGION = os.getenv("AWS_REGION", "ap-south-1")
+TABLE_NAME = os.getenv("DYNAMODB_TABLE", "users")
+ENVIRONMENT = os.getenv("ENVIRONMENT", "dev")
 
-class Item(BaseModel):
-    arg1: str
-    arg2: str
+# Initialize DynamoDB
+dynamodb = boto3.resource("dynamodb", region_name=AWS_REGION)
+table = dynamodb.Table(TABLE_NAME)
+
+app = FastAPI(title="Serverless FastAPI + DynamoDB")
 
 @app.get("/")
 def root():
-    return {"message": "Updated: FastAPI running on Lambda via Docker latest"}
+    return {
+        "message": "API running",
+        "environment": ENVIRONMENT,
+        "table": TABLE_NAME
+    }
 
-@app.post("/post-data")
-def print_args(item: Item):
-    print(f"arg1: {item.arg1}, arg2: {item.arg2}")
-    return {"arg1": item.arg1, "arg2": item.arg2}
+@app.post("/users")
+def create_user(name: str):
+    user_id = str(uuid.uuid4())
+
+    table.put_item(
+        Item={
+            "user_id": user_id,
+            "name": name
+        }
+    )
+
+    return {"user_id": user_id, "name": name}
+
+@app.get("/users/{user_id}")
+def get_user(user_id: str):
+    response = table.get_item(Key={"id": user_id})
+    return response.get("Item", {"message": "User not found"})
 
 handler = Mangum(app)
