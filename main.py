@@ -5,7 +5,7 @@ from fastapi import FastAPI
 from mangum import Mangum
 
 # Read environment variables
-AWS_REGION = os.getenv("AWS_REGION")
+AWS_REGION = os.getenv("AWS_REGION1")
 TABLE_NAME = os.getenv("DYNAMODB_TABLE")
 ENVIRONMENT = os.getenv("ENVIRONMENT")
 
